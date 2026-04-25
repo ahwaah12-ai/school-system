@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SchoolGuard AI — دخول</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="schoollogin_style.css">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- ── Backgrounds ── -->
+<div class="bg-gradient"></div>
+<div class="bg-grid"></div>
+<div class="vignette"></div>
+<div class="top-glow"></div>
+
+<!-- ── Fake camera grid bg ── -->
+<div class="cam-bg">
+  <div class="cam-bg-cell" data-label="CAM-01 فناء"><div class="scan" style="animation-duration:3s"></div></div>
+  <div class="cam-bg-cell" data-label="CAM-02 مدخل"><div class="scan" style="animation-duration:4s;animation-delay:1s"></div></div>
+  <div class="cam-bg-cell" data-label="CAM-03 ممر"><div class="scan" style="animation-duration:2.5s;animation-delay:0.5s"></div></div>
+  <div class="cam-bg-cell" data-label="CAM-04 قاعة"><div class="scan" style="animation-duration:5s;animation-delay:2s"></div></div>
+  <div class="cam-bg-cell" data-label="CAM-05 خارجي"><div class="scan" style="animation-duration:3.5s;animation-delay:1.5s"></div></div>
+  <div class="cam-bg-cell" data-label="CAM-06 مكتبة"><div class="scan" style="animation-duration:4.5s;animation-delay:0.8s"></div></div>
+</div>
+
+<!-- ── Scanlines ── -->
+<div class="scanlines"></div>
+
+<!-- ── Floating particles ── -->
+<div class="particles" id="particles"></div>
+
+<!-- ── Decorative left stats ── -->
+<div class="float-stats">
+  <div class="float-stat">
+    <div class="fs-val c" id="camCount">06</div>
+    <div class="fs-label">CAMERAS</div>
+  </div>
+  <div class="float-stat">
+    <div class="fs-val g">12</div>
+    <div class="fs-label">ONLINE</div>
+  </div>
+  <div class="float-stat">
+    <div class="fs-val r" id="alertCount">03</div>
+    <div class="fs-label">ALERTS</div>
+  </div>
+</div>
+
+<!-- ── Decorative right alerts ── -->
+<div class="float-alerts">
+  <div class="float-alert">
+    <div class="fa-row">
+      <span class="fa-sev fa-e">خطأ</span>
+      <span class="fa-cam">CAM-02</span>
+      <span class="fa-time">14:32</span>
+    </div>
+    <div class="fa-title">شخص غير معروف</div>
+    <div class="fa-desc">تم اكتشاف شخص غير مسجل عند المدخل الرئيسي</div>
+  </div>
+  <div class="float-alert">
+    <div class="fa-row">
+      <span class="fa-sev fa-w">تحذير</span>
+      <span class="fa-cam">CAM-04</span>
+      <span class="fa-time">14:28</span>
+    </div>
+    <div class="fa-title">تجمع غير طبيعي</div>
+    <div class="fa-desc">تجمع 7 طلاب في منطقة محظورة بالقاعة</div>
+  </div>
+  <div class="float-alert">
+    <div class="fa-row">
+      <span class="fa-sev fa-o">سليم</span>
+      <span class="fa-cam">CAM-01</span>
+      <span class="fa-time">14:25</span>
+    </div>
+    <div class="fa-title">حركة طبيعية</div>
+    <div class="fa-desc">الفناء الرئيسي آمن — لا توجد مخالفات</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     MAIN LOGIN CARD
+══════════════════════════════════════════════════ -->
+<div class="shell">
+  <div class="card">
+    <div class="card-corner tl"></div>
+    <div class="card-corner br"></div>
+
+    <!-- Header -->
+    <div class="card-header">
+      <div class="logo-wrap">
+        <div class="logo-ring">
+          <div class="logo-ring-inner"></div>
+        </div>
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M15 10l4.553-2.069A1 1 0 0121 8.883v6.234a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="card-title">School<em>Guard</em></div>
+      <div class="card-sub">SECURITY MONITORING SYSTEM · v2.0</div>
+
+      <div class="sys-strip">
+        <div class="sys-item"><div class="sys-dot"></div>AI ACTIVE</div>
+        <div class="sys-item"><div class="sys-dot d2"></div>CAMERAS ONLINE</div>
+        <div class="sys-item"><div class="sys-dot d3"></div>SECURE CONN</div>
+      </div>
+    </div>
+
+    <!-- Body / Form -->
+    <div class="card-body">
+      <div class="error-msg" id="errorMsg">
+        ❌ اسم المستخدم أو كلمة المرور غلط
+      </div>
+
+      <form id="loginForm" onsubmit="handleLogin(event)" autocomplete="off">
+
+        <!-- Username -->
+        <div class="fg">
+          <div class="fg-label"><span>◈</span> اسم المستخدم</div>
+          <div class="input-wrap">
+            <input
+              type="text"
+              id="username"
+              placeholder="admin"
+              autocomplete="username"
+              spellcheck="false"
+            />
+            <div class="input-line"></div>
+            <div class="input-icon">👤</div>
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="fg">
+          <div class="fg-label"><span>◈</span> كلمة المرور</div>
+          <div class="input-wrap">
+            <input
+              type="password"
+              id="password"
+              placeholder="••••••••"
+              autocomplete="current-password"
+              id="password"
+            />
+            <div class="input-line"></div>
+            <div class="input-icon">🔒</div>
+            <button type="button" class="pw-toggle" id="pwToggle" onclick="togglePw()">👁</button>
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="submit-btn" id="submitBtn">
+          <div class="btn-inner">
+            <div class="btn-spinner"></div>
+            <span class="btn-text">دخول النظام</span>
+            <span>→</span>
+          </div>
+        </button>
+
+      </form>
+    </div>
+
+    <!-- Footer -->
+    <div class="card-footer">
+      <div class="footer-hint">
+        <div class="dot"></div>
+        نظام محمي ومشفر
+      </div>
+      <div class="footer-version">SG-AI © 2026</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     SUCCESS OVERLAY
+══════════════════════════════════════════════════ -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-icon">✓</div>
+  <div class="success-text">تم التحقق بنجاح</div>
+  <div class="success-sub" id="successSub">جاري تحميل النظام...</div>
+  <div class="success-bar">
+    <div class="success-bar-fill" id="successFill"></div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════
+//  PARTICLES
+// ══════════════════════════════════════════════════
+(function spawnParticles() {
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 30; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.cssText = `
+      left: ${Math.random() * 100}%;
+      width: ${Math.random() > 0.7 ? 3 : 2}px;
+      height: ${Math.random() > 0.7 ? 3 : 2}px;
+      animation-duration: ${6 + Math.random() * 14}s;
+      animation-delay: ${Math.random() * 12}s;
+      opacity: ${0.3 + Math.random() * 0.5};
+    `;
+    container.appendChild(p);
+  }
+})();
+
+// ══════════════════════════════════════════════════
+//  LIVE CLOCK in background stats
+// ══════════════════════════════════════════════════
+setInterval(() => {
+  // animate alert count
+  const el = document.getElementById('alertCount');
+  if (el && Math.random() > 0.92) {
+    const v = parseInt(el.textContent) + (Math.random() > 0.5 ? 1 : -1);
+    el.textContent = String(Math.max(0, Math.min(99, v))).padStart(2,'0');
+  }
+}, 3000);
+
+// ══════════════════════════════════════════════════
+//  PASSWORD TOGGLE
+// ══════════════════════════════════════════════════
+function togglePw() {
+  const input = document.getElementById('password');
+  const btn   = document.getElementById('pwToggle');
+  if (input.type === 'password') {
+    input.type = 'text';
+    btn.textContent = '🙈';
+  } else {
+    input.type = 'password';
+    btn.textContent = '👁';
+  }
+}
+
+// ══════════════════════════════════════════════════
+//  LOGIN HANDLER
+//  Users: admin/admin123 · مدير/123456 · guard/guard2026
+// ══════════════════════════════════════════════════
+const USERS = {
+  'admin':   { password: 'admin123',  name: 'المدير العام',    role: 'admin'   },
+  'مدير':    { password: '123456',    name: 'مدير المدرسة',    role: 'manager' },
+  'guard':   { password: 'guard2026', name: 'ضابط الأمن',      role: 'guard'   },
+  'teacher': { password: 'teach2026', name: 'المعلم',          role: 'viewer'  },
+};
+
+async function handleLogin(e) {
+  e.preventDefault();
+
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value;
+  const btn      = document.getElementById('submitBtn');
+  const errMsg   = document.getElementById('errorMsg');
+
+  // Clear errors
+  errMsg.classList.remove('show');
+  document.getElementById('username').classList.remove('error');
+  document.getElementById('password').classList.remove('error');
+
+  // Validation
+  if (!username) {
+    document.getElementById('username').classList.add('error');
+    shake(document.getElementById('username'));
+    return;
+  }
+  if (!password) {
+    document.getElementById('password').classList.add('error');
+    shake(document.getElementById('password'));
+    return;
+  }
+
+  // Loading state
+  btn.classList.add('loading');
+
+  // Simulate network delay
+  await delay(1200 + Math.random() * 600);
+
+  // Check credentials
+  const user = USERS[username];
+  if (!user || user.password !== password) {
+    btn.classList.remove('loading');
+    errMsg.classList.add('show');
+    document.getElementById('username').classList.add('error');
+    document.getElementById('password').classList.add('error');
+    shake(document.getElementById('errorMsg'));
+    // Shake the whole card
+    document.querySelector('.card').style.animation = 'none';
+    requestAnimationFrame(() => {
+      document.querySelector('.card').style.animation = 'shake 0.4s ease';
+    });
+    return;
+  }
+
+  // Success!
+  btn.classList.remove('loading');
+  showSuccess(user);
+}
+
+function showSuccess(user) {
+  const overlay = document.getElementById('successOverlay');
+  const sub     = document.getElementById('successSub');
+  const fill    = document.getElementById('successFill');
+
+  sub.textContent = `مرحباً، ${user.name} — جاري تحميل لوحة التحكم`;
+  overlay.classList.add('show');
+
+  // Animate progress bar
+  requestAnimationFrame(() => {
+    setTimeout(() => { fill.style.width = '100%'; }, 100);
+  });
+
+  // Redirect after 1.8s
+  setTimeout(() => {
+    // In real app: window.location.href = 'SchoolGuard.html'
+    // For demo: just show message and reload
+    sub.textContent = '✓ تم التحميل — جاري الانتقال...';
+    setTimeout(() => {
+      // redirect to SchoolGuard main page
+      window.location.href = 'SchoolGuard.html';
+    }, 400);
+  }, 1800);
+}
+
+function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function shake(el) {
+  el.style.animation = 'none';
+  requestAnimationFrame(() => { el.style.animation = 'shake 0.4s ease'; });
+}
+
+// ══════════════════════════════════════════════════
+//  INPUT ENTER KEY
+// ══════════════════════════════════════════════════
+document.getElementById('username').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('password').focus();
+});
+
+// ══════════════════════════════════════════════════
+//  AUTO-FOCUS
+// ══════════════════════════════════════════════════
+window.addEventListener('load', () => {
+  setTimeout(() => document.getElementById('username').focus(), 600);
+});
+</script>
+</body>
+</html>
